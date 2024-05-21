@@ -17,7 +17,7 @@ class Blog extends Model
 
     public $timestamps = false; // Disable Laravel's default timestamps
       
-    protected $fillable = ['blog_date','blog_category_id','blog_author_id','title','page_slug','page_title','header_text','description','active','created','modified'];
+    protected $fillable = ['blog_date','blog_category_id','blog_author_id','title','page_slug','page_title','page_url','header_text','description','active','created','modified'];
 
     // Define the belongsTo relationship
     public function blogcategory()

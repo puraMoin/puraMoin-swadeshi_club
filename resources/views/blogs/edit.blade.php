@@ -33,9 +33,9 @@
           <!-- Categories -->
          <div  class="col-sm-3">
             <div class="select-style-1">
-            <label>Category <span class="mandatory"> *</span></label>
+            <label for="BlogCategory">Category <span class="mandatory"> *</span></label>
             <div class="select-position select-sm">
-             <select class="jSelectbox" id="actionDropdown" name="blog_category_id" required>
+             <select class="jSelectbox" id="BlogCategory" name="blog_category_id" required>
                 <option value="{{ $blogCategory->id }}">{{ $blogCategory->name }}</option> 
                   @foreach ($blogCategories as $blogCategory)
                      <option value="{{ $blogCategory->id }}">{{ $blogCategory->name }}</option>
@@ -79,25 +79,25 @@
          <div class="col-sm-6">
             <div class="input-style-1">
             <label>Title <span class="mandatory">*</span></label>
-            <input type="text"  name="title" placeholder="Title" value="{{ $blog->title }}"  required/>
+            <input type="text"  name="title" placeholder="Title" value="{{ $blog->title }}" id="BlogTitle"  required/>
             </div>   
          </div>
          <div class="col-sm-6">
             <div class="input-style-1">
             <label>Page Slug <span class="mandatory">*</span></label>
-            <input type="text"  name="page_slug" placeholder="Page Slug" value="{{ $blog->page_slug }}"   required/>
+            <input type="text"  name="page_slug" placeholder="Page Slug" value="{{ $blog->page_slug }}" id="BlogPageSlug"   required/>
             </div>   
          </div>
-          <div class="col-sm-6">
+          <div class="col-sm-5">
             <div class="input-style-1">
             <label>Page Title</label>
             <input type="text"  name="page_title" placeholder="Page Title" value="{{ $blog->page_title }}" />
             </div>   
          </div>
-         <div class="col-sm-6">
+         <div class="col-sm-7">
             <div class="input-style-1">
             <label>Page Url</label>
-            <input type="url"  name="page_url" placeholder="Page URL" value="{{ $blog->page_url }}"  readonly/>
+            <input type="url"  name="page_url" placeholder="Page URL" value="{{ $blog->page_url }}" id="BlogPageUrl"  readonly/>
             </div>   
          </div>
       </div> 
@@ -156,6 +156,102 @@
 </form>
 </section>	
 @endsection
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+   $('#BlogCategory').change(function() {
+   var categoryText = $('#BlogCategory').find('option:selected').text().toLowerCase();
+   var catslug = categoryText.replace(/[_\s]()/g, '-');
+   //alert(catslug);   
+   var value = $('#BlogTitle').val();
+   var result = value.replace(/[_\s()&]/g, function(match) {
+    if (match === '&') {
+       return 'and'; // Replace '&' with 'and'
+    } else {
+      return '-'; // Replace spaces, underscores, and parentheses with '-'
+    }
+   });
+
+   var blogsid = "<?php echo $blogsId; ?>";
+
+   var url = "<?php echo $baseUrl;?>" +'/'+ catslug +'/'+ result +'-'+ blogsid;
+
+   $('#BlogPageUrl').val(url);
+
+});
+
+$('#BlogTitle').keyup(function(){
+   var value = $(this).val().toLowerCase();
+   var name = capitalizeFirstLetter(value);
+
+   var result = value.replace(/[_\s()&]/g, function(match) {
+    if (match === '&') {
+       return 'and'; // Replace '&' with 'and'
+    } else {
+      return '-'; // Replace spaces, underscores, and parentheses with '-'
+    }
+   });  
+
+   var top = $('#BlogCategory').val();
+   if(top != '')
+	{
+	var categoryText = $('#BlogCategory').find('option:selected').text().toLowerCase();
+	var catslug = categoryText.replace(/[_\s]()/g, '-');
+	var blogsid = "<?php echo $blogsId; ?>";
+	var url = "<?php echo $baseUrl;?>" +'/'+ catslug +'/'+ result +'-'+ blogsid;
+	//alert(url);
+	
+	}
+	else{
+	var blogsid = "<?php echo $blogsId; ?>";
+	var url = "<?php echo $baseUrl;?>"  +'/'+ result +'-'+ blogsid;
+	//alert(url);
+	}
+
+    $('#BlogPageSlug').val(result);
+	 $('#BlogPageUrl').val(url);
+
+});
+
+/*Update From Page Slug*/
+$('#BlogPageSlug').keyup(function(){
+	var value = $(this).val().toLowerCase();
+	var result = value.replace(/[_\s()&]/g, function(match) {
+    if (match === '&') {
+      return 'and'; // Replace '&' with 'and'
+    } else {
+      return '-'; // Replace spaces, underscores, and parentheses with '-'
+    }
+  });
+	$(this).val(result);
+	var top = $('#BlogCategory').val();
+	if(top != '')
+	{
+	var categoryText = $('#BlogCategory').find('option:selected').text().toLowerCase();
+	var catslug = categoryText.replace(/[_\s]()/g, '-');
+	var blogsid = "<?php echo $blogsId; ?>";
+	var url = "<?php echo $baseUrl;?>" +'/'+ catslug +'/'+ result +'-'+ blogsid;
+	//alert(url);
+	
+	}
+	else{
+	var blogsid = "<?php echo $blogsId; ?>";
+	var url = "<?php echo $baseUrl;?>"  +'/'+ result +'-'+ blogsid;
+	//alert(url);
+	}
+	$('#BlogPageUrl').val(url);
+});
+
+function capitalizeFirstLetter(text) {
+    return text.replace(/^(.)|\s(.)/g, function($1) {
+        return $1.toUpperCase();
+    });
+}
+});
+
+</script>   
 
 
 

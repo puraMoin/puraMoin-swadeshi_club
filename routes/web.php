@@ -129,7 +129,7 @@ Route::prefix('countries')->group(function () {
   Route::resource('wishlists', WishlistsController::class); 
 
   
-  Route::get('/products/generate-slug', [ProductsController::class.'generateSlug'])->name('products.generate-slug');
+  Route::get('/products/generate-slug', [ProductsController::class,'generateSlug'])->name('products.generate-slug');
 
 
   Route::get('/get-states/{countryId}', [StatesController::class, 'getStates']);

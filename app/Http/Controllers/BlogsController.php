@@ -52,7 +52,14 @@ class BlogsController extends Controller
         $blogTags = BlogTag::all()->where('active',true);
         $blogTagList = $blogTags->pluck('name','id');
 
-         return view('blogs.create',compact('pageTitle','blogCategoryList','blogAuthorList','blogTagList'));
+        /*For Blog Slug*/
+        // Use the Blog model to find the maximum id in the blogs table
+        $maxBlogId = Blog::max('id');
+
+        $blogsId = is_null($maxBlogId) ? 1 : $maxBlogId + 1;
+        $baseUrl = url('/');
+
+    return view('blogs.create',compact('pageTitle','blogCategoryList','blogAuthorList','blogTagList','blogsId','baseUrl'));
     }
 
     /**
@@ -63,13 +70,13 @@ class BlogsController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
-
+        //dd($request->input('page_url'));
         $request->validate([
             'blog_category_id' => ['required'],
             'blog_author_id'=>['required'],
             'blogtags'=>['required'],
             'title'=>['required'],
+            'page_url' => ['required'],
              ]);
 
           $blogCatId = $request->input('blog_category_id');
@@ -172,12 +179,17 @@ class BlogsController extends Controller
 
        $selectedBlogTags = $blog->blogtags;
 
+       
        $blogtags = BlogTag::all(); 
-       //dd($menuLinks);
+       /*For Making Slug Start*/
+       $blogsId = $id;
+       $baseUrl = url('/');  
+       /*For Making Slug End*/
+
        $parentMenu = 'Blog List';
        $pageTitle = "Edit";
        return view('blogs.edit',compact('parentMenu','pageTitle','blogCategory','blogCategories',
-       	'blogAuthor','blogAuthors','selectedBlogTags','blog','blogtags'));
+       	'blogAuthor','blogAuthors','selectedBlogTags','blog','blogtags','blogsId','baseUrl'));
     }
 
     /**
@@ -211,6 +223,7 @@ class BlogsController extends Controller
         {
             $blogAuthorId = $blogAuthor->id;
         } 
+
 
         $blog->update([
             'blog_category_id' => $blogCategoryId,
