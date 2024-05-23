@@ -24,7 +24,7 @@
          <div class="col-sm-4">
             <div class="input-style-1">
             <label>Name<span class="mandatory">*</span></label>
-            <input type="text"  name="name" placeholder="Enter Name" required="true" value="{{ $blogcategory->name  }}" />
+            <input type="text"  name="name" placeholder="Enter Name" id="BlogCatName" required="true" value="{{ $blogcategory->name  }}" />
             </div>   
          </div>
 
@@ -53,7 +53,7 @@
      <div class="col-sm-4">
             <div class="input-style-1">
             <label>Page Slug<span class="mandatory">*</span></label>
-            <input type="text"  name="page_slug" placeholder="Enter Page Slug" required="true" value="{{ $blogcategory->page_slug  }}"/>
+            <input type="text"  name="page_slug" placeholder="Enter Page Slug" id="BlogCatSlug" required="true" value="{{ $blogcategory->page_slug  }}"/>
             </div>   
      </div>
        
@@ -61,7 +61,7 @@
      <div class="col-sm-8">
             <div class="input-style-1">
             <label>Page Url<span class="mandatory">*</span></label>
-            <input type="text"  name="page_url" placeholder="Page Url" required="true" value="{{ $blogcategory->page_url  }}" />
+            <input type="text"  name="page_url" placeholder="Page Url" id="BlogCatUrl" required="true" value="{{ $blogcategory->page_url  }}" />
             </div>   
      </div>  
 
@@ -86,4 +86,54 @@
 </form>
 </section>	
 @endsection
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
 
+$(document).ready(function() {
+
+$('#BlogCatName').keyup(function(){
+   
+   var value = $(this).val().toLowerCase();
+   var name = capitalizeFirstLetter(value);
+
+   var result = value.replace(/[_\s()&]/g, function(match) {
+    if (match === '&') {
+       return 'and'; // Replace '&' with 'and'
+    } else {
+      return '-'; // Replace spaces, underscores, and parentheses with '-'
+    }
+   });  
+
+	var url = "<?php echo $baseUrl;?>"  +'/'+ 'blogs' +'/'+ result ;
+
+    $('#BlogCatSlug').val(result);
+	 $('#BlogCatUrl').val(url);
+
+});
+
+/*Update From Page Slug*/
+$('#BlogCatSlug').keyup(function(){
+	var value = $(this).val().toLowerCase();
+	var result = value.replace(/[_\s()&]/g, function(match) {
+    if (match === '&') {
+      return 'and'; // Replace '&' with 'and'
+    } else {
+      return '-'; // Replace spaces, underscores, and parentheses with '-'
+    }
+  });
+	$(this).val(result);
+
+	var url = "<?php echo $baseUrl;?>"  +'/'+ 'blogs' +'/'+ result ;
+	//alert(url);
+
+	$('#BlogCatUrl').val(url);
+});
+
+function capitalizeFirstLetter(text) {
+    return text.replace(/^(.)|\s(.)/g, function($1) {
+        return $1.toUpperCase();
+    });
+}
+});
+
+</script>   

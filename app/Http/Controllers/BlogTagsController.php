@@ -31,7 +31,8 @@ class BlogTagsController extends Controller
     {
         //
         $pageTitle = 'Add';
-        return view('blogtags.create',compact('pageTitle'));
+        $baseUrl = url('/');
+        return view('blogtags.create',compact('pageTitle','baseUrl'));
     }
 
     /**
@@ -95,11 +96,12 @@ class BlogTagsController extends Controller
     {
         //
         $blogtag = BlogTag::findOrFail($id);
+        $baseUrl = url('/');
 
         $parentMenu = 'Blog';
     
         $pageTitle = "Edit";
-        return view('blogtags.edit',compact('parentMenu','pageTitle','blogtag'));
+        return view('blogtags.edit',compact('parentMenu','pageTitle','blogtag','baseUrl'));
     }
 
     /**

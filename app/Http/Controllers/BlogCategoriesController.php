@@ -31,7 +31,14 @@ class BlogCategoriesController extends Controller
     public function create()
     {
         $pageTitle = 'Add';
-        return view('blogcategory.create',compact('pageTitle'));
+        /*For Making Slug Start*/
+        // Use the Blog model to find the maximum id in the blogs table
+        $maxBlogId = BlogCategory::max('id');
+
+        $blogcatId = is_null($maxBlogId) ? 1 : $maxBlogId + 1;
+        $baseUrl = url('/'); 
+       /*For Making Slug End*/
+        return view('blogcategory.create',compact('pageTitle','blogcatId','baseUrl'));
     }
 
     /**
@@ -98,7 +105,11 @@ class BlogCategoriesController extends Controller
         $parentMenu = 'Blog';
     
         $pageTitle = "Edit";
-        return view('blogcategory.edit',compact('parentMenu','pageTitle','blogcategory'));
+        /*For Making Slug Start*/
+        $blogcatId = $id;
+        $baseUrl = url('/');  
+       /*For Making Slug End*/
+        return view('blogcategory.edit',compact('parentMenu','pageTitle','blogcategory','blogcatId','baseUrl'));
     }
 
     /**
